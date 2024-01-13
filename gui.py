@@ -6,13 +6,15 @@ sg.theme('DarkAmber')
 clock = sg.Text('',key='Clock')
 label = sg.Text('Type in a todo')
 input_box = sg.InputText(tooltip='Enter a todo',key = 'todo_input')
-add_button = sg.Button('Add')
+add_button = sg.Button(key='Add',image_source='add.png',image_size=(30,30),
+                       mouseover_colors='Brown',tooltip='Add Todo')
 list_box = sg.Listbox(values=todo_functions.get_todos(),
                       key='todos_list',
                       enable_events=True,
                       size=(45,10))
 edit_button = sg.Button('Edit')
-complete_button = sg.Button('Complete')
+complete_button = sg.Button(key='Complete',image_source='complete.png',image_size=(50,50),
+                            mouseover_colors='Brown',tooltip='Complete Todo')
 exit_button = sg.Button('Exit')
 window = sg.Window('My To-Do App',
                    layout=[[clock],
@@ -26,10 +28,13 @@ while True:
     window['Clock'].update(value= time.strftime('%b %d, %Y %H:%M'))
     match event:
         case 'Add':
+            if values['todo_input'] == '' or values['todo_input'].isspace():
+                sg.popup('Blank item inputted. Please try again',font=('Helvetica',20))
+                window['todo_input'].update('')
+                continue
             todos = todo_functions.get_todos()
             todos.append(values['todo_input'])
             todo_functions.write_todos(todos)
-
             window['todos_list'].update(values=todos)
         case 'Edit':
             try:
